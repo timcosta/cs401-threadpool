@@ -12,22 +12,29 @@
 #include <sys/time.h>
 
 #include "threadpool.h"
-#include "list.c"
+#include "queue.c"
+
+
+// State of the threadpool
+typedef enum {
+  ALL_RUN, ALL_EXIT
+} poolstate_t;
+
 
 // _threadpool is the internal threadpool structure that is
 // cast to type "threadpool" before it given out to callers
 typedef struct _threadpool_st {
 	pthread_t      *array;
 
-	pthread_mutex_t mutex;
-	pthread_cond_t  job_posted; 
+	pthread_mutex_t mutex; // a lock on the queue
+	pthread_cond_t  job_posted;  
 	pthread_cond_t  job_taken; 
 
 	poolstate_t     state;
 	int             threadCount;
 	int             live;
- 	queueHead      *job_queue;
- 	
+ 	queue      *q;
+
 } _threadpool;
 
 
@@ -44,7 +51,9 @@ threadpool create_threadpool(int num_threads_in_pool) {
 	return NULL;
 	}
 
-	// add your code here to initialize the newly created threadpool
+	// Make an array of threads
+
+	// Start each thread in the array
 
 	return (threadpool) pool;
 }
