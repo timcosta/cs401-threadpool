@@ -18,14 +18,18 @@
 // cast to type "threadpool" before it given out to callers
 typedef struct _threadpool_st {
 	pthread_t      *array;
+
 	pthread_mutex_t mutex;
 	pthread_cond_t  job_posted; 
 	pthread_cond_t  job_taken; 
+
 	poolstate_t     state;
 	int             threadCount;
 	int             live;
  	queueHead      *job_queue;
+ 	
 } _threadpool;
+
 
 threadpool create_threadpool(int num_threads_in_pool) {
 	_threadpool *pool;
