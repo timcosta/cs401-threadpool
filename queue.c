@@ -79,7 +79,7 @@ void removeJob(Queue * q, dispatch_fn * func, void ** arg) {
 
 		Node * temp = q->head;
 
-		// Set these pointers in the thread to the valued of the job info
+		// Set these pointers in the thread to the values of the job info
 		*func = temp->func_to_dispatch;
 		*arg  = temp->func_arg;
 
