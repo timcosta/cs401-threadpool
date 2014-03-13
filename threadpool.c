@@ -159,13 +159,77 @@ threadpool create_threadpool(int num_threads_in_pool) {
 // Allocate a new job to the Threadpool
 void dispatch(threadpool from_me, dispatch_fn dispatch_to_here, void *arg) {
 	_threadpool *pool = (_threadpool *) from_me;
+	if(pool != (_threadpool *) arg){
+		pthread_cleanup_push(pthread_mutex_unlock, (void *) &pool->mutex);
+
+		if (pthread_mutex_lock(&pool->mutex) != 0) {
+			perror("Mutex lock fail");
+			exit(-1);
+		}
+
+		while(!canAcceptWork(pool->q)) {
+			pthread_cond_signal(&pool->jobPosted);
+			pthread_cond_wait(&pool->jobTaken,&pool->mutex);
+		}
+
+		addWorkOrder(pool->q,dispatch_to_here,arg,NULL,NULL);
+
+		pthread_cond_signal(&pool->jobPosted);
+
+		if (0 != pthread_mutex_unlock(&pool->mutex)) {
+			perror("\n\nMutex unlock failed!:");
+			exit(EXIT_FAILURE);
+		}
+		pthread_cleanup_pop(1);
+	}
 }
 
 // Shut Down the Thread Pool
 void destroy_threadpool(threadpool destroyme) {
 	_threadpool *pool = (_threadpool *) destroyme;
 
-	// Set the status flag to exiting 
+	int oldType;
+	pthread_setcanceltype(PTHREAD_CANCELLED_DEFERRED,&oldType);
+	pthread_cleanup_push(pthread_mutex_unlock, (void*) &pool->mutex);
 
+	if(pthread_mutex_lock(&pool->mutex) != 0) {
+		perror("Failed to lock mutext");
+		exit(-1);
+	}
+
+	pool->state = ALL_EXIT;
+	while (pool->live > 0) {
+		pthread_cond_signal(&pool->jobPosted);
+		pthread_cond_wait(&pool->jobTaken, &pool->mutex);
+	}
+	memset(pool->array,0,pool->threadCount * sizeof(pthread_t));
+	free(pool->array);
+	pthread_cleanup_pop(0);
+
+	if (pthread_mutex_unlock(&pool->mutex) != 0) {
+		perror("\n\nFailed to unlock mutex");
+		exit(EXIT_FAILURE);
+	}
+
+	if (pthread_mutex_destroy(&pool->mutex) != 0) {
+		perror("\nFailed to destroy mutex");
+		exit(EXIT_FAILURE);
+	}
+
+	if (pthread_cond_destroy(&pool->jobPosted) != 0) {
+		perror("\nFailed to destroy jobPosted");
+		exit(EXIT_FAILURE);
+	}
+
+	if (pthread_cond_destroy(&pool->jobTaken) != 0) {
+		perror("\nFailed to destroy jobTaken");
+		exit(EXIT_FAILURE);
+	}
+
+	memset(pool, 0, sizeof(_threadpool));
+
+	free(pool);
+	pool = NULL;
+	destroyme = NULL;
 
 }
