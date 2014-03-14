@@ -40,6 +40,7 @@ typedef struct _threadpool_st {
 
 // Worker(consumer function) run by all the threads
 void * work (void * sharedpool) {
+	printf("working")
 
 	// Create a pointer to the thread pool
 	_threadpool *pool = (_threadpool *) sharedpool;
@@ -109,6 +110,7 @@ void * work (void * sharedpool) {
 
 // Create a new threadpool to do work
 threadpool create_threadpool(int num_threads_in_pool) {
+	printf("creating");
 	_threadpool *pool;
 
 	// sanity check the argument
@@ -157,6 +159,7 @@ threadpool create_threadpool(int num_threads_in_pool) {
 
 // Allocate a new job to the Threadpool
 void dispatch(threadpool from_me, dispatch_fn dispatch_to_here, void *arg) {
+	printf("dispatching");
 	_threadpool *pool = (_threadpool *) from_me;
 	if(pool != (_threadpool *) arg){
 		pthread_cleanup_push(pthread_mutex_unlock, (void *) &pool->mutex);
@@ -185,6 +188,7 @@ void dispatch(threadpool from_me, dispatch_fn dispatch_to_here, void *arg) {
 
 // Shut Down the Thread Pool
 void destroy_threadpool(threadpool destroyme) {
+	printf("destroying");
 	_threadpool *pool = (_threadpool *) destroyme;
 
 	if(pthread_mutex_lock(&pool->mutex) != 0) {
