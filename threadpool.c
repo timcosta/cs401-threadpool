@@ -96,7 +96,8 @@ void * work (void * sharedpool) {
 	// Decrease the number of live threads
 	pool->numLive--;
 
-
+	// Wakes u pthe detroyer thread to keep terminating threads.
+	pthread_cond_signal(&pool->jobTaken);
 	// Yield the mutex lock
 	if (0 != pthread_mutex_unlock(&(pool->mutex))) {
 		fprintf(stderr, "nMutex unlock failed!\n");
@@ -168,7 +169,6 @@ void dispatch(threadpool from_me, dispatch_fn dispatch_to_here, void *arg) {
 	//fprintf(stdout,"dispatching\n");
 	_threadpool *pool = (_threadpool *) from_me;
 	if(pool != (_threadpool *) arg){
-		pthread_cleanup_push(pthread_mutex_unlock, (void *) &pool->mutex);
 
 		if (pthread_mutex_lock(&pool->mutex) != 0) {
 			perror("Mutex lock fail");
@@ -188,7 +188,6 @@ void dispatch(threadpool from_me, dispatch_fn dispatch_to_here, void *arg) {
 			perror("\n\nMutex unlock failed!:");
 			exit(EXIT_FAILURE);
 		}
-		pthread_cleanup_pop(1);
 	}
 }
 
