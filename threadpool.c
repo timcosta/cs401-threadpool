@@ -40,7 +40,7 @@ typedef struct _threadpool_st {
 
 // Worker(consumer function) run by all the threads
 void * work (void * sharedpool) {
-	printf("working")
+	printf("working");
 
 	// Create a pointer to the thread pool
 	_threadpool *pool = (_threadpool *) sharedpool;
