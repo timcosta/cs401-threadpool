@@ -23,6 +23,7 @@ void dispatch_to_me(void *arg) {
 
 int main(int argc, char **argv) {
   printf("started");
+  sleep(5);
   threadpool tp;
   printf("initialized threadpool");
   tp = create_threadpool(2);
