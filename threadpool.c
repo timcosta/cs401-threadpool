@@ -187,10 +187,6 @@ void dispatch(threadpool from_me, dispatch_fn dispatch_to_here, void *arg) {
 void destroy_threadpool(threadpool destroyme) {
 	_threadpool *pool = (_threadpool *) destroyme;
 
-	int oldType;
-	pthread_setcanceltype(PTHREAD_CANCELLED_DEFERRED,&oldType);
-	pthread_cleanup_push(pthread_mutex_unlock, (void*) &pool->mutex);
-
 	if(pthread_mutex_lock(&pool->mutex) != 0) {
 		perror("Failed to lock mutext");
 		exit(-1);
