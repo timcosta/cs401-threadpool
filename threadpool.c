@@ -64,7 +64,7 @@ void * work (void * sharedpool) {
 		// If state has changed stop the job loop and prepare to terminate the thread
 		if (pool->state == EXITING) break;
 	
-		// Get a job to do from the queue
+		// Get a job from the queue and set job data to myJob and myArgs
 		removeJob(pool->theQueue, &myJob, &myArgs);
 
 		// Allow producer to add more jobs to queue
@@ -166,6 +166,5 @@ void destroy_threadpool(threadpool destroyme) {
 	_threadpool *pool = (_threadpool *) destroyme;
 
 	// Set the status flag to exiting 
-
 
 }
