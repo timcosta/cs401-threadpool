@@ -22,10 +22,11 @@ void dispatch_to_me(void *arg) {
 }
 
 int main(int argc, char **argv) {
+  printf("started");
   threadpool tp;
-
+  printf("initialized threadpool");
   tp = create_threadpool(2);
-
+  printf("create_threadpool");
   fprintf(stdout, "**main** dispatch 3\n");
   dispatch(tp, dispatch_to_me, (void *) 3);
   fprintf(stdout, "**main** dispatch 6\n");
