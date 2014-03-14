@@ -151,8 +151,8 @@ threadpool create_threadpool(int num_threads_in_pool) {
 			fprintf(stderr, "\n\nThread creation failed:\n");
 			exit(0);
 		}
-
-		pool->numLive++;
+		fprintf(stdout,"incrementing\n");
+		(pool->numLive)++;
 		fprintf(stdout,"detaching\n");
 		pthread_detach(pool->array[i]);  // Release thread memory when thread exits
 		fprintf(stdout,"detached\n");
