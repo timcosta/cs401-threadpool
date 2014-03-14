@@ -166,12 +166,12 @@ void dispatch(threadpool from_me, dispatch_fn dispatch_to_here, void *arg) {
 			exit(-1);
 		}
 
-		while(!canAcceptWork(pool->q)) {
+		while(!canAddJob(pool->q)) {
 			pthread_cond_signal(&pool->jobPosted);
 			pthread_cond_wait(&pool->jobTaken,&pool->mutex);
 		}
 
-		addWorkOrder(pool->q,dispatch_to_here,arg,NULL,NULL);
+		addJob(pool->q,dispatch_to_here,arg,NULL,NULL);
 
 		pthread_cond_signal(&pool->jobPosted);
 
