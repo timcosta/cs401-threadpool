@@ -199,7 +199,6 @@ void destroy_threadpool(threadpool destroyme) {
 	}
 	memset(pool->array,0,pool->threadCount * sizeof(pthread_t));
 	free(pool->array);
-	pthread_cleanup_pop(0);
 
 	if (pthread_mutex_unlock(&pool->mutex) != 0) {
 		perror("\n\nFailed to unlock mutex");
