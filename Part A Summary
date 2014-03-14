@@ -1,0 +1,10 @@
+Tim Costa and Ryan Warrier
+CS406 Threadpool Project A
+
+For the syncronization we compared this to the producer/consumer problem in the textbook. We implemented a shared threadpool that all threads had access to. Naturally we felt that whenever anything in the threadpool was accessed we needed a mutex so threads were not concurrently writing. Within the threadpool we had a queue of waiting jobs, which we implemented as a Doubly LinkedList. When jobs were dispatched, we added them to the end of the queue (FIFO) and when a thread was ready to accept a job we removed it from the head of the queue. 
+
+If the queue was full, the thread had to wait on a conditional variable called jobTaken, and it would be woken up when a worker took a job from the queue, and therefore freed up space at the end of the queue. If the queue was empty, a worker thread would wait on a conditional variable called jobPosted, and it would be woken up when the next job was dispatched to the queue. 
+
+For destruction of the threadpool, we wanted this to happen gracefully. We kept a count of the number of live threads, and we set an exit flag and looped through all waiting jobs and had the work function break out of them cleanly. We chose to drop all jobs waiting in the queue, as the threads are supposed to commit suicide immediately. However, we did this gracefully by allowing any threads that were in the process of completing jobs to finish completing that job. 
+
+TL;DR we used one mutex, two conditional variables, an exit flag, a thread counter, and a job queue to implement the threadpool and gracefully destroy it.

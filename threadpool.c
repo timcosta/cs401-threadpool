@@ -40,6 +40,7 @@ typedef struct _threadpool_st {
 
 // Worker(consumer function) run by all the threads
 void * work (void * sharedpool) {
+	//fprintf(stdout,"working\n");
 
 	// Create a pointer to the thread pool
 	_threadpool *pool = (_threadpool *) sharedpool;
@@ -49,7 +50,7 @@ void * work (void * sharedpool) {
 	void        *myArgs;
 
 	// Obtain a lock on job queue read/write
-	if (0 != pthread_mutex_lock(&(pool->mutex)) {
+	if (0 != pthread_mutex_lock(&(pool->mutex))) {
 		fprintf(stderr, "nMutex lock failed!\n");
 		exit(0);
 	}
@@ -63,16 +64,15 @@ void * work (void * sharedpool) {
 
 		// If state has changed stop the job loop and prepare to terminate the thread
 		if (pool->state == EXITING) break;
-	
-		// Get a job from the queue and set job data to myJob and myArgs
-		removeJob(pool->theQueue, &myJob, &myArgs);
+		// Get a job to do from the queue
+		removeJob(pool->q, &myJob, &myArgs);
 
 		// Allow producer to add more jobs to queue
-		pthread_cond_signal(&(pool->jobTaken);
+		pthread_cond_signal(&(pool->jobTaken));
 
 
 		// Yield the mutex lock for producer and other worker threads
-		if (0 != pthread_mutex_unlock(&(pool->mutex)) {
+		if (0 != pthread_mutex_unlock(&(pool->mutex))) {
 			fprintf(stderr, "nMutex unlock failed!\n");
 			exit(0);
 		}
@@ -83,37 +83,38 @@ void * work (void * sharedpool) {
 
 
 		// Re-obtain the lock on job queue read/write
-		if (0 != pthread_mutex_lock(&(pool->mutex)) {
+		if (0 != pthread_mutex_lock(&(pool->mutex))) {
 			fprintf(stderr, "nMutex lock failed!\n");
 			exit(0);
 		}
 
 
-	}  while(true);
+	}  while(1);
 
 
 	// Decrease the number of live threads
 	pool->numLive--;
 
-
+	// Wakes u pthe detroyer thread to keep terminating threads.
+	pthread_cond_signal(&pool->jobTaken);
 	// Yield the mutex lock
-	if (0 != pthread_mutex_unlock(&(pool->mutex)) {
+	if (0 != pthread_mutex_unlock(&(pool->mutex))) {
 		fprintf(stderr, "nMutex unlock failed!\n");
 		exit(0);
 	}
 
-	printf("Thread Dying!...");
+	fprintf(stdout,"Thread Dying!...");
 	return NULL;
 }
 
 
 // Create a new threadpool to do work
 threadpool create_threadpool(int num_threads_in_pool) {
+	//fprintf(stdout,"creating\n");
 	_threadpool *pool;
 
 	// sanity check the argument
-	if ((num_threads_in_pool <= 0) || (num_threads_in_pool > MAXT_IN_POOL))
-	return NULL;
+	if ((num_threads_in_pool <= 0) || (num_threads_in_pool > MAXT_IN_POOL)) return NULL;
 	
 	// Create the pool in memory
 	pool = (_threadpool *) malloc(sizeof(_threadpool));
@@ -132,7 +133,9 @@ threadpool create_threadpool(int num_threads_in_pool) {
 	pool->q = makeQueue();
 
 	// Make an array of threads
+	//fprintf(stdout,"init array\n");
 	pool->array = (pthread_t *) malloc (pool->threadCount * sizeof(pthread_t));
+	//fprintf(stdout,"array initted\n");
 	if (NULL == pool->array) {
 		fprintf(stderr, "\n\nOut of memory allocating thread array!\n");
 		free(pool);
@@ -140,15 +143,19 @@ threadpool create_threadpool(int num_threads_in_pool) {
 		return NULL;
 	}
 
-	// Start each thread in the array
-	for (int i = 0; i < pool->threadCount; i++) {
-		if (0 != pthread_create(pool->array[i], NULL, work, (void *) pool)) {
+	int i;
+	//fprintf(stdout,"entering for loop\n");
+	for (i = 0; i < pool->threadCount; i++) {
+		//fprintf(stdout,"in for loop\n");
+		if (0 != pthread_create(pool->array + i, NULL, work, (void *) pool)) {
 			fprintf(stderr, "\n\nThread creation failed:\n");
 			exit(0);
 		}
-
+		//fprintf(stdout,"incrementing\n");
 		pool->numLive++;
+		//fprintf(stdout,"detaching\n");
 		pthread_detach(pool->array[i]);  // Release thread memory when thread exits
+		//fprintf(stdout,"detached\n");
 	}
 
 
@@ -158,13 +165,69 @@ threadpool create_threadpool(int num_threads_in_pool) {
 
 // Allocate a new job to the Threadpool
 void dispatch(threadpool from_me, dispatch_fn dispatch_to_here, void *arg) {
+	//fprintf(stdout,"dispatching\n");
 	_threadpool *pool = (_threadpool *) from_me;
+	if(pool != (_threadpool *) arg){
+
+		if (pthread_mutex_lock(&pool->mutex) != 0) {
+			perror("Mutex lock fail");
+			exit(-1);
+		}
+
+		while(!canAddJob(pool->q)) {
+			pthread_cond_signal(&pool->jobPosted);
+			pthread_cond_wait(&pool->jobTaken,&pool->mutex);
+		}
+
+		addJob(pool->q,dispatch_to_here,arg);
+
+		pthread_cond_signal(&pool->jobPosted);
+
+		if (0 != pthread_mutex_unlock(&pool->mutex)) {
+			perror("\n\nMutex unlock failed!:");
+			exit(EXIT_FAILURE);
+		}
+	}
 }
 
 // Shut Down the Thread Pool
 void destroy_threadpool(threadpool destroyme) {
+	//fprintf(stdout,"destroying\n");
 	_threadpool *pool = (_threadpool *) destroyme;
 
-	// Set the status flag to exiting 
+	if(pthread_mutex_lock(&pool->mutex) != 0) {
+		perror("Failed to lock mutext");
+		exit(-1);
+	}
 
+	pool->state = EXITING;
+	while (pool->numLive > 0) {
+		pthread_cond_signal(&pool->jobPosted);
+		pthread_cond_wait(&pool->jobTaken, &pool->mutex);
+	}
+	free(pool->array);
+
+	if (pthread_mutex_unlock(&pool->mutex) != 0) {
+		perror("\n\nFailed to unlock mutex");
+		exit(EXIT_FAILURE);
+	}
+
+	if (pthread_mutex_destroy(&pool->mutex) != 0) {
+		perror("\nFailed to destroy mutex");
+		exit(EXIT_FAILURE);
+	}
+
+	if (pthread_cond_destroy(&pool->jobPosted) != 0) {
+		perror("\nFailed to destroy jobPosted");
+		exit(EXIT_FAILURE);
+	}
+
+	if (pthread_cond_destroy(&pool->jobTaken) != 0) {
+		perror("\nFailed to destroy jobTaken");
+		exit(EXIT_FAILURE);
+	}
+
+	free(pool);
+	pool = NULL;
+	destroyme = NULL;
 }
