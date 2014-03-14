@@ -72,7 +72,7 @@ void * work (void * sharedpool) {
 
 
 		// Yield the mutex lock for producer and other worker threads
-		if (0 != pthread_mutex_unlock(&(pool->mutex)) {
+		if (0 != pthread_mutex_unlock(&(pool->mutex))) {
 			fprintf(stderr, "nMutex unlock failed!\n");
 			exit(0);
 		}
