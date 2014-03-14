@@ -65,10 +65,10 @@ void * work (void * sharedpool) {
 		if (pool->state == EXITING) break;
 	
 		// Get a job to do from the queue
-		removeJob(pool->theQueue, &myJob, &myArgs);
+		removeJob(pool->q, &myJob, &myArgs);
 
 		// Allow producer to add more jobs to queue
-		pthread_cond_signal(&(pool->jobTaken);
+		pthread_cond_signal(&(pool->jobTaken));
 
 
 		// Yield the mutex lock for producer and other worker threads
@@ -198,7 +198,7 @@ void destroy_threadpool(threadpool destroyme) {
 	}
 
 	pool->state = ALL_EXIT;
-	while (pool->live > 0) {
+	while (pool->numLive > 0) {
 		pthread_cond_signal(&pool->jobPosted);
 		pthread_cond_wait(&pool->jobTaken, &pool->mutex);
 	}
