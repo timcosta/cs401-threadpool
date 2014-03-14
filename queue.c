@@ -30,7 +30,7 @@ struct Queue * makeQueue() {
 	// Allocate memory for queue
 	Queue * q = (Queue *) malloc(sizeof(Queue));
 
-	fprintf(stdout,"made it through malloc");
+	fprintf(stdout,"made it through malloc\n");
 
 	// Initialize the variables
 	q->size = 0;
