@@ -40,7 +40,7 @@ typedef struct _threadpool_st {
 
 // Worker(consumer function) run by all the threads
 void * work (void * sharedpool) {
-	fprintf(stdout,"working\n");
+	//fprintf(stdout,"working\n");
 
 	// Create a pointer to the thread pool
 	_threadpool *pool = (_threadpool *) sharedpool;
@@ -110,7 +110,7 @@ void * work (void * sharedpool) {
 
 // Create a new threadpool to do work
 threadpool create_threadpool(int num_threads_in_pool) {
-	fprintf(stdout,"creating\n");
+	//fprintf(stdout,"creating\n");
 	_threadpool *pool;
 
 	// sanity check the argument
@@ -133,9 +133,9 @@ threadpool create_threadpool(int num_threads_in_pool) {
 	pool->q = makeQueue();
 
 	// Make an array of threads
-	fprintf(stdout,"init array\n");
+	//fprintf(stdout,"init array\n");
 	pool->array = (pthread_t *) malloc (pool->threadCount * sizeof(pthread_t));
-	fprintf(stdout,"array initted\n");
+	//fprintf(stdout,"array initted\n");
 	if (NULL == pool->array) {
 		fprintf(stderr, "\n\nOut of memory allocating thread array!\n");
 		free(pool);
@@ -144,18 +144,18 @@ threadpool create_threadpool(int num_threads_in_pool) {
 	}
 
 	int i;
-	fprintf(stdout,"entering for loop\n");
+	//fprintf(stdout,"entering for loop\n");
 	for (i = 0; i < pool->threadCount; i++) {
-		fprintf(stdout,"in for loop\n");
+		//fprintf(stdout,"in for loop\n");
 		if (0 != pthread_create(pool->array + i, NULL, work, (void *) pool)) {
 			fprintf(stderr, "\n\nThread creation failed:\n");
 			exit(0);
 		}
-		fprintf(stdout,"incrementing\n");
-		(pool->numLive)++;
-		fprintf(stdout,"detaching\n");
+		//fprintf(stdout,"incrementing\n");
+		pool->numLive++;
+		//fprintf(stdout,"detaching\n");
 		pthread_detach(pool->array[i]);  // Release thread memory when thread exits
-		fprintf(stdout,"detached\n");
+		//fprintf(stdout,"detached\n");
 	}
 
 
@@ -165,7 +165,7 @@ threadpool create_threadpool(int num_threads_in_pool) {
 
 // Allocate a new job to the Threadpool
 void dispatch(threadpool from_me, dispatch_fn dispatch_to_here, void *arg) {
-	fprintf(stdout,"dispatching\n");
+	//fprintf(stdout,"dispatching\n");
 	_threadpool *pool = (_threadpool *) from_me;
 	if(pool != (_threadpool *) arg){
 		pthread_cleanup_push(pthread_mutex_unlock, (void *) &pool->mutex);
@@ -194,7 +194,7 @@ void dispatch(threadpool from_me, dispatch_fn dispatch_to_here, void *arg) {
 
 // Shut Down the Thread Pool
 void destroy_threadpool(threadpool destroyme) {
-	fprintf(stdout,"destroying\n");
+	//fprintf(stdout,"destroying\n");
 	_threadpool *pool = (_threadpool *) destroyme;
 
 	if(pthread_mutex_lock(&pool->mutex) != 0) {

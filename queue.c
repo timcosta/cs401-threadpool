@@ -26,11 +26,11 @@ typedef struct Queue {
 
 // Create a new queue
 struct Queue * makeQueue() {
-	fprintf(stdout,"makeQueue\n");
+	//fprintf(stdout,"makeQueue\n");
 	// Allocate memory for queue
 	Queue * q = (Queue *) malloc(sizeof(Queue));
 
-	fprintf(stdout,"made it through malloc\n");
+	//fprintf(stdout,"made it through malloc\n");
 
 	// Initialize the variables
 	q->size = 0;
@@ -45,7 +45,7 @@ struct Queue * makeQueue() {
 
 // Add a job to the queue
 void addJob(Queue * q, dispatch_fn func, void * arg) {
-	fprintf(stdout,"addJob\n");
+	//fprintf(stdout,"addJob\n");
 	// Only add the job to the queue if it is not at capacity 
 	if (q->size < q->maxSize) {
 
@@ -75,7 +75,7 @@ void addJob(Queue * q, dispatch_fn func, void * arg) {
 
 // Remove a job from the queue to be used by a threadpool
 void removeJob(Queue * q, dispatch_fn * func, void ** arg) {
-	fprintf(stdout,"removeJob\n");
+	//fprintf(stdout,"removeJob\n");
 	// Only remove a job if there is at least one already on the queue 
 	if (q->size > 0) {
 
@@ -106,12 +106,12 @@ void removeJob(Queue * q, dispatch_fn * func, void ** arg) {
 
 // Can another job be added to the queue
 int canAddJob(struct Queue * q) {
-	fprintf(stdout,"canAddJob\n");
+	//fprintf(stdout,"canAddJob\n");
 	return(q->size < q->maxSize);
 }
 
 // Is there a job to be done
 int isJobAvailable(struct Queue * q) {
-	fprintf(stdout,"isJobAvailable\n");
+  //fprintf(stdout,"isJobAvailable\n");
   return(q->head != NULL);
 }
