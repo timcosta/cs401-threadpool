@@ -61,7 +61,7 @@ void addJob(Queue * q, dispatch_fn func, void * arg) {
 
 		} else {
 			q->tail->next = temp;
-			q->tail->next->prev = tail;
+			q->tail->next->prev = q->tail;
 			q->tail = temp;
 		}
 
@@ -80,7 +80,7 @@ void removeJob(Queue * q, dispatch_fn * func, void ** arg) {
 		Node * temp = q->head;
 
 		// Set these pointers in the thread to the values of the job info
-		*func = temp->func_to_dispatch;
+		*func = temp->func;
 		*arg  = temp->func_arg;
 
 		// Remove the last job on the queue
