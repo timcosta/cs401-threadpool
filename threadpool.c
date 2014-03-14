@@ -89,7 +89,7 @@ void * work (void * sharedpool) {
 		}
 
 
-	}  while(true);
+	}  while(1);
 
 
 	// Decrease the number of live threads
@@ -97,7 +97,7 @@ void * work (void * sharedpool) {
 
 
 	// Yield the mutex lock
-	if (0 != pthread_mutex_unlock(&(pool->mutex)) {
+	if (0 != pthread_mutex_unlock(&(pool->mutex))) {
 		fprintf(stderr, "nMutex unlock failed!\n");
 		exit(0);
 	}
@@ -112,8 +112,7 @@ threadpool create_threadpool(int num_threads_in_pool) {
 	_threadpool *pool;
 
 	// sanity check the argument
-	if ((num_threads_in_pool <= 0) || (num_threads_in_pool > MAXT_IN_POOL))
-	return NULL;
+	if ((num_threads_in_pool <= 0) || (num_threads_in_pool > MAXT_IN_POOL)) return NULL;
 	
 	// Create the pool in memory
 	pool = (_threadpool *) malloc(sizeof(_threadpool));
