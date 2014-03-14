@@ -171,7 +171,7 @@ void dispatch(threadpool from_me, dispatch_fn dispatch_to_here, void *arg) {
 			pthread_cond_wait(&pool->jobTaken,&pool->mutex);
 		}
 
-		addJob(pool->q,dispatch_to_here,arg,NULL,NULL);
+		addJob(pool->q,dispatch_to_here,arg);
 
 		pthread_cond_signal(&pool->jobPosted);
 
@@ -197,7 +197,6 @@ void destroy_threadpool(threadpool destroyme) {
 		pthread_cond_signal(&pool->jobPosted);
 		pthread_cond_wait(&pool->jobTaken, &pool->mutex);
 	}
-	memset(pool->array,0,pool->threadCount * sizeof(pthread_t));
 	free(pool->array);
 
 	if (pthread_mutex_unlock(&pool->mutex) != 0) {
@@ -219,8 +218,6 @@ void destroy_threadpool(threadpool destroyme) {
 		perror("\nFailed to destroy jobTaken");
 		exit(EXIT_FAILURE);
 	}
-
-	memset(pool, 0, sizeof(_threadpool));
 
 	free(pool);
 	pool = NULL;
