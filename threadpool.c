@@ -139,8 +139,8 @@ threadpool create_threadpool(int num_threads_in_pool) {
 		return NULL;
 	}
 
-	// Start each thread in the array
-	for (int i = 0; i < pool->threadCount; i++) {
+	int i;
+	for (i = 0; i < pool->threadCount; i++) {
 		if (0 != pthread_create(pool->array[i], NULL, work, (void *) pool)) {
 			fprintf(stderr, "\n\nThread creation failed:\n");
 			exit(0);
