@@ -49,7 +49,7 @@ void * work (void * sharedpool) {
 	void        *myArgs;
 
 	// Obtain a lock on job queue read/write
-	if (0 != pthread_mutex_lock(&(pool->mutex)) {
+	if (0 != pthread_mutex_lock(&(pool->mutex))) {
 		fprintf(stderr, "nMutex lock failed!\n");
 		exit(0);
 	}
