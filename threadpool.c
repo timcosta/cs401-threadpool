@@ -133,7 +133,9 @@ threadpool create_threadpool(int num_threads_in_pool) {
 	pool->q = makeQueue();
 
 	// Make an array of threads
+	fprintf(stdout,"init array\n");
 	pool->array = (pthread_t *) malloc (pool->threadCount * sizeof(pthread_t));
+	fprintf(stdout,"array initted\n");
 	if (NULL == pool->array) {
 		fprintf(stderr, "\n\nOut of memory allocating thread array!\n");
 		free(pool);
