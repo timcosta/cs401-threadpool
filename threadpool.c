@@ -192,7 +192,7 @@ void destroy_threadpool(threadpool destroyme) {
 		exit(-1);
 	}
 
-	pool->state = ALL_EXIT;
+	pool->state = EXITING;
 	while (pool->numLive > 0) {
 		pthread_cond_signal(&pool->jobPosted);
 		pthread_cond_wait(&pool->jobTaken, &pool->mutex);
