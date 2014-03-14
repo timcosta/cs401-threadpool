@@ -28,7 +28,9 @@ typedef struct Queue {
 struct Queue * makeQueue() {
 	fprintf(stdout,"makeQueue\n");
 	// Allocate memory for queue
-	Queue * q = (Queue *) malloc (sizeof(Queue));
+	Queue * q = (Queue *) malloc(sizeof(Queue));
+
+	fprintf(stdout,"made it through malloc");
 
 	// Initialize the variables
 	q->size = 0;
@@ -47,7 +49,7 @@ void addJob(Queue * q, dispatch_fn func, void * arg) {
 	// Only add the job to the queue if it is not at capacity 
 	if (q->size < q->maxSize) {
 
-		Node * temp = (Node *) malloc (sizeof(Node));
+		Node * temp = (Node *) malloc(sizeof(Node));
 		
 		temp->func = func;
 		temp->func_arg = arg;
