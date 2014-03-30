@@ -53,6 +53,7 @@ int main(int argc, char **argv)
   threadpool pool; // the threadpool
   reqArgs rargs;
   clock_t begin, end;
+  int dispCount = 0;
 
   // Check for the correct number of args
   if (argc != 4)
@@ -102,8 +103,11 @@ int main(int argc, char **argv)
 
     // Get the clock val after dispatch
     end = clock();
+    dispCount++;
     
   }
+
+  fprintf(stdout,"There are %f tasks/second for %d threads and %d loops", (double) dispCount/300, poolSize, numLoops);
 }
 
 
