@@ -32,10 +32,10 @@ char *handle_request(void * rargs);
 void  send_response(int fd, char *response, int response_length);
 
 // Struct that stores the arguments to be passed to handle_request() 
-struct reqArgs {
+typedef struct reqArgs {
   int socket;     /* socket to communicate on */
   int numLoops;  /* number of loops(of work) for process request to do*/
-};
+} reqArgs;
 
 /**
  * This program should be invoked as ./server <socketnumber> <poolsize> <num_loops>", for
