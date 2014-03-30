@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <errno.h>
+#include <time.h>
 
 #include "SocketLibrary/socklib.h"
 #include "common.h"
@@ -51,6 +52,7 @@ int main(int argc, char **argv)
   int  numLoops; // num loops for worl
   threadpool pool; // the threadpool
   reqArgs rargs;
+  clock_t begin, end;
 
   // Check for the correct number of args
   if (argc != 4)
@@ -78,7 +80,10 @@ int main(int argc, char **argv)
    *  connection is listened for, and then dispatches threads to handle new requests. 
    */
 
-  while(1) {
+   // Start the clock
+   begin = clock();
+
+  while(((double)(end - begin) / CLOCKS_PER_SEC) < 300) {
 
     socket_talk = saccept(socket_listen);  // step 1
     if (socket_talk < 0) {
@@ -94,6 +99,9 @@ int main(int argc, char **argv)
 
     // Let thread from threadpool handle the request
     dispatch(pool, handle_request, &rargs);
+
+    // Get the clock val after dispatch
+    end = clock();
     
   }
 }
