@@ -80,11 +80,12 @@ int main(int argc, char **argv)
    * Here's the main loop of our program.  Inside the loop, a
    *  connection is listened for, and then dispatches threads to handle new requests. 
    */
-
-  while(dispCount <= 90000 || ((double)(end - begin) / CLOCKS_PER_SEC) < 180) {
-    if(dispCount == 90000) begin = clock();
-    //if (((int)(end-begin)/CLOCKS_PER_SEC)%20 == 0) fprintf(stdout,"Dispatched %d in %f sec\n",dispCount,(double)(end-begin)/CLOCKS_PER_SEC);
+  begin = clock();
+  while(((double)(end - begin) / CLOCKS_PER_SEC) < 60.0) {
+    //if(dispCount == 9000) begin = clock();
+    //if (((int)(end-begin)/CLOCKS_PER_SEC)%10 == 0) fprintf(stdout,"Dispatched %d in %f sec\n",dispCount,(double)(end-begin)/CLOCKS_PER_SEC);
     socket_talk = saccept(socket_listen);  // step 1
+    //fprintf(stdout,"accepted connection\n");
     if (socket_talk < 0) {
       fprintf(stderr, "An error occured in the server; a connection\n");
       fprintf(stderr, "failed because of ");
@@ -102,10 +103,10 @@ int main(int argc, char **argv)
     // Get the clock val after dispatch
     end = clock();
     dispCount++;
-    
+    //fprintf(stdout,"just dispatched\n");
   }
 
-  fprintf(stdout,"There are %f tasks/second for %d threads and %d loops\n", (double) (dispCount-90000)/180, poolSize, numLoops);
+  fprintf(stdout,"There are %f tasks/second for %d threads and %d loops\n", (double)(dispCount)/60.0, poolSize, numLoops);
   exit(0);
 }
 

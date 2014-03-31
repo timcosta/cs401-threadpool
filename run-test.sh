@@ -7,11 +7,11 @@ do
 	do
 		count=$[$count +1]
 		echo "NUM_LOOPS=$j"
-		./server $[8200+ $count] $i $j &
+		./server $[8600+ $count] $i $j &
 		for k in {2..$i}
 		do
-			./client localhost $[8200+ $count] &
+			./client localhost $[8600+ $count] &
 		done
-		./client localhost $[8200+ $count]
+		./client localhost $[8600+ $count]
 	done
 done
