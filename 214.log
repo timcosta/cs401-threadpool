@@ -1,0 +1,79 @@
+Starting thread count 1
+NUM_LOOPS=1
+There are 14501.072222 tasks/second for 1 threads and 1 loops
+NUM_LOOPS=100
+There are 8627.550000 tasks/second for 1 threads and 100 loops
+NUM_LOOPS=1000
+There are 1747.205556 tasks/second for 1 threads and 1000 loops
+NUM_LOOPS=10000
+There are 326.183333 tasks/second for 1 threads and 10000 loops
+NUM_LOOPS=100000
+There are 60.272222 tasks/second for 1 threads and 100000 loops
+NUM_LOOPS=500000
+There are 12.100000 tasks/second for 1 threads and 500000 loops
+Starting thread count 2
+NUM_LOOPS=1
+There are 27257.000000 tasks/second for 2 threads and 1 loops
+NUM_LOOPS=100
+There are 15806.166667 tasks/second for 2 threads and 100 loops
+NUM_LOOPS=1000
+There are 3466.500000 tasks/second for 2 threads and 1000 loops
+NUM_LOOPS=10000
+There are 461.966667 tasks/second for 2 threads and 10000 loops
+NUM_LOOPS=100000
+There are 120.133333 tasks/second for 2 threads and 100000 loops
+NUM_LOOPS=500000
+There are 24.200000 tasks/second for 2 threads and 500000 loops
+Starting thread count 4
+NUM_LOOPS=1
+There are 24050.600000 tasks/second for 4 threads and 1 loops
+NUM_LOOPS=100
+There are 15513.333333 tasks/second for 4 threads and 100 loops
+NUM_LOOPS=1000
+There are 3252.600000 tasks/second for 4 threads and 1000 loops
+NUM_LOOPS=10000
+There are 419.766667 tasks/second for 4 threads and 10000 loops
+NUM_LOOPS=100000
+There are 84.033333 tasks/second for 4 threads and 100000 loops
+NUM_LOOPS=500000
+There are 23.033333 tasks/second for 4 threads and 500000 loops
+Starting thread count 8
+NUM_LOOPS=1
+There are 19451.566667 tasks/second for 8 threads and 1 loops
+NUM_LOOPS=100
+There are 13983.166667 tasks/second for 8 threads and 100 loops
+NUM_LOOPS=1000
+There are 3261.666667 tasks/second for 8 threads and 1000 loops
+NUM_LOOPS=10000
+There are 437.566667 tasks/second for 8 threads and 10000 loops
+NUM_LOOPS=100000
+There are 106.700000 tasks/second for 8 threads and 100000 loops
+NUM_LOOPS=500000
+There are 23.300000 tasks/second for 8 threads and 500000 loops
+Starting thread count 16
+NUM_LOOPS=1
+There are 18706.433333 tasks/second for 16 threads and 1 loops
+NUM_LOOPS=100
+There are 12598.300000 tasks/second for 16 threads and 100 loops
+NUM_LOOPS=1000
+There are 3234.066667 tasks/second for 16 threads and 1000 loops
+NUM_LOOPS=10000
+There are 409.800000 tasks/second for 16 threads and 10000 loops
+NUM_LOOPS=100000
+There are 111.733333 tasks/second for 16 threads and 100000 loops
+NUM_LOOPS=500000
+There are 23.766667 tasks/second for 16 threads and 500000 loops
+Starting thread count 32
+NUM_LOOPS=1
+There are 18493.166667 tasks/second for 32 threads and 1 loops
+NUM_LOOPS=100
+There are 12481.966667 tasks/second for 32 threads and 100 loops
+NUM_LOOPS=1000
+There are 3218.733333 tasks/second for 32 threads and 1000 loops
+NUM_LOOPS=10000
+There are 412.666667 tasks/second for 32 threads and 10000 loops
+NUM_LOOPS=100000
+There are 87.300000 tasks/second for 32 threads and 100000 loops
+NUM_LOOPS=500000
+There are 23.966667 tasks/second for 32 threads and 500000 loops
+./run-test.sh: error reading input file: Stale NFS file handle
