@@ -1,0 +1,25 @@
+Tim Costa and Ryan Warrier
+
+CS406 Threadpool Project Final Writeup
+
+For the final part of our project, we used the threadpool from part A to implement a multithreaded server. Theoretically, the graphs should have had the appearance of a logarithmic graph, but ours did not have that appearance. Instead, our graph took the form of an exponential decay. See the .xlsx file in this folder for the graph and sample data from the 221-q.log sample data.
+
+To collect our data, we use time.h and the clock() function to ensure that we received 60 seconds of CPU time for each test. To minimize time spent running the tests by hand, Tim wrote a bash script to iterate through all of the configurations necessary, and modified the program to print out a summary at the end of the 60 second run. These log files are also store in this directory as *.log. 
+
+The naming of the log files is a little more complicated. the first set of runs are 213.log, 218.log, and 221.log. After this run, we noticed we had data that represented an exponential decay, and increased our queue size to no avail. these logs have -q appended to the compute number that they were run on. 
+
+After failing to get the logarithmic graph we desired, we began analyzing our code for reasons as to why it was behaving unexpectedly. As I mentioned above, the first thing we tried was increasing the queue size. That had no effect. after furthur analyzing the code, we realized that the clients wait for theprevious request to have finished before firing off another one. This, coupled with the fact that we ran the same number of clients as there were threads, means that the queue only ever had one task in it, and that task did not stay in the queue for long at all.
+
+We believe that our data is representative of an expontential decay for three main reasons:
+
+1. The computes are not quiet machines. No matter what time of day the tests are run, the computes are not going to be quiet machines. Anyone can log in to them and run whatever they want, and there is no way to guarantee that there isnt a rogue process throwing off the performance of our program.
+
+2. Because of number 1, the context switching overhead became very large when there were 32 threads running simultaneously.
+
+3. We ran our clients on the same machine as the server. We are not sure this had much of an impact, because we ran tests with the server and clients isolated on different computes and the results were not very different, but we could not account for the possibility of network latency there.
+
+As you can see from our data, performance was fairly level after the number of threads exceeded two. From four threads upwards, the performance was almost dead even, and sometimes even fluctuated up and down when the number of threads was increased. 
+
+After a careful analysis of our threadpool code, server code, and queue code, the only thing we can think of that affected our data like this is the machines not being quiet. 
+
+We believe however that we may have seen increased performance if we ran more clients than there were threads. We noticed that there were times when half of our threads were waiting for work and sitting idle, which is clearly not representative of what we are looking for. Had we run more clients, there would be work in the queue at all times, and the thread would be busy constantly. This would allow the increased number of threads to be properly utilized, and we believe it would show the performance desired.
