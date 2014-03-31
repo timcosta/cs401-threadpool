@@ -4,7 +4,7 @@
  * This file contains the implementation of the job queue
  */
 
-#define MAX_NUM_NODES 1000
+#define MAX_NUM_NODES 100000
 
 
 // The Node of a Queue
@@ -20,6 +20,7 @@ typedef struct Queue {
 	struct Node * head;
 	struct Node * tail;
 	int size;
+	int totalAdded;
 	int maxSize;
 } Queue;
 
@@ -34,6 +35,7 @@ struct Queue * makeQueue() {
 
 	// Initialize the variables
 	q->size = 0;
+	q->totalAdded = 0;
 	q->maxSize = MAX_NUM_NODES;
 	q->head = NULL;
 	q->tail = NULL;
@@ -45,6 +47,7 @@ struct Queue * makeQueue() {
 
 // Add a job to the queue
 void addJob(Queue * q, dispatch_fn func, void * arg) {
+//	fprintf(stdout,"Queue Size: %d/%d\n",q->size,q->totalAdded);
 	//fprintf(stdout,"addJob\n");
 	// Only add the job to the queue if it is not at capacity 
 	if (q->size < q->maxSize) {
@@ -54,7 +57,7 @@ void addJob(Queue * q, dispatch_fn func, void * arg) {
 		temp->func = func;
 		temp->func_arg = arg;
 		temp->next = NULL;
-
+		q->totalAdded++;
 		// The first job added to the list
 		if (q->head == NULL) {
 			q->head = temp;

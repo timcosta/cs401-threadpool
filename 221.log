@@ -1,0 +1,78 @@
+Starting thread count 1
+NUM_LOOPS=1
+There are 28307.533333 tasks/second for 1 threads and 1 loops
+NUM_LOOPS=100
+There are 16929.566667 tasks/second for 1 threads and 100 loops
+NUM_LOOPS=1000
+There are 3564.233333 tasks/second for 1 threads and 1000 loops
+NUM_LOOPS=10000
+There are 1163.666667 tasks/second for 1 threads and 10000 loops
+NUM_LOOPS=100000
+There are 120.600000 tasks/second for 1 threads and 100000 loops
+NUM_LOOPS=500000
+There are 24.200000 tasks/second for 1 threads and 500000 loops
+Starting thread count 2
+NUM_LOOPS=1
+There are 24442.566667 tasks/second for 2 threads and 1 loops
+NUM_LOOPS=100
+There are 15003.900000 tasks/second for 2 threads and 100 loops
+NUM_LOOPS=1000
+There are 3437.466667 tasks/second for 2 threads and 1000 loops
+NUM_LOOPS=10000
+There are 417.366667 tasks/second for 2 threads and 10000 loops
+NUM_LOOPS=100000
+There are 104.166667 tasks/second for 2 threads and 100000 loops
+NUM_LOOPS=500000
+There are 24.200000 tasks/second for 2 threads and 500000 loops
+Starting thread count 4
+NUM_LOOPS=1
+There are 22650.833333 tasks/second for 4 threads and 1 loops
+NUM_LOOPS=100
+There are 13169.333333 tasks/second for 4 threads and 100 loops
+NUM_LOOPS=1000
+There are 3212.066667 tasks/second for 4 threads and 1000 loops
+NUM_LOOPS=10000
+There are 416.233333 tasks/second for 4 threads and 10000 loops
+NUM_LOOPS=100000
+There are 108.400000 tasks/second for 4 threads and 100000 loops
+NUM_LOOPS=500000
+There are 21.966667 tasks/second for 4 threads and 500000 loops
+Starting thread count 8
+NUM_LOOPS=1
+There are 18342.766667 tasks/second for 8 threads and 1 loops
+NUM_LOOPS=100
+There are 12290.800000 tasks/second for 8 threads and 100 loops
+NUM_LOOPS=1000
+There are 3216.300000 tasks/second for 8 threads and 1000 loops
+NUM_LOOPS=10000
+There are 406.333333 tasks/second for 8 threads and 10000 loops
+NUM_LOOPS=100000
+There are 96.266667 tasks/second for 8 threads and 100000 loops
+NUM_LOOPS=500000
+There are 23.400000 tasks/second for 8 threads and 500000 loops
+Starting thread count 16
+NUM_LOOPS=1
+There are 17579.033333 tasks/second for 16 threads and 1 loops
+NUM_LOOPS=100
+There are 12487.500000 tasks/second for 16 threads and 100 loops
+NUM_LOOPS=1000
+There are 3209.866667 tasks/second for 16 threads and 1000 loops
+NUM_LOOPS=10000
+There are 406.966667 tasks/second for 16 threads and 10000 loops
+NUM_LOOPS=100000
+There are 105.233333 tasks/second for 16 threads and 100000 loops
+NUM_LOOPS=500000
+There are 23.733333 tasks/second for 16 threads and 500000 loops
+Starting thread count 32
+NUM_LOOPS=1
+There are 17646.333333 tasks/second for 32 threads and 1 loops
+NUM_LOOPS=100
+There are 12344.033333 tasks/second for 32 threads and 100 loops
+NUM_LOOPS=1000
+There are 3192.266667 tasks/second for 32 threads and 1000 loops
+NUM_LOOPS=10000
+There are 408.666667 tasks/second for 32 threads and 10000 loops
+NUM_LOOPS=100000
+There are 103.700000 tasks/second for 32 threads and 100000 loops
+NUM_LOOPS=500000
+There are 23.633333 tasks/second for 32 threads and 500000 loops

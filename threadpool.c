@@ -59,12 +59,12 @@ void * work (void * sharedpool) {
 	do {
 
 		while(!isJobAvailable(pool->q)) {
+//			fprintf(stdout,"Waiting...\n");
 			pthread_cond_wait(&(pool->jobPosted), &(pool->mutex));
 		}
 
 		// If state has changed stop the job loop and prepare to terminate the thread
 		if (pool->state == EXITING) break;
-	
 		// Get a job to do from the queue
 		removeJob(pool->q, &myJob, &myArgs);
 
@@ -88,7 +88,7 @@ void * work (void * sharedpool) {
 			fprintf(stderr, "nMutex lock failed!\n");
 			exit(0);
 		}
-
+		//fprintf(stdout,"Job was available q->size: %d\n",pool->q->size);
 
 	}  while(1);
 
@@ -104,7 +104,7 @@ void * work (void * sharedpool) {
 		exit(0);
 	}
 
-	fprintf(stdout,"Thread Dying!...");
+//	fprintf(stdout,"Thread Dying!...\n");
 	return NULL;
 }
 
@@ -166,7 +166,7 @@ threadpool create_threadpool(int num_threads_in_pool) {
 
 // Allocate a new job to the Threadpool
 void dispatch(threadpool from_me, dispatch_fn dispatch_to_here, void *arg) {
-	//fprintf(stdout,"dispatching\n");
+//	fprintf(stdout,"dispatching\n");
 	_threadpool *pool = (_threadpool *) from_me;
 	if(pool != (_threadpool *) arg){
 
@@ -176,18 +176,20 @@ void dispatch(threadpool from_me, dispatch_fn dispatch_to_here, void *arg) {
 		}
 
 		while(!canAddJob(pool->q)) {
+			fprintf(stdout,"cant add job\n");
 			pthread_cond_signal(&pool->jobPosted);
 			pthread_cond_wait(&pool->jobTaken,&pool->mutex);
 		}
 
 		addJob(pool->q,dispatch_to_here,arg);
-
+//		fprintf(stdout,"Job Added: %d\n",pool->q->size);
 		pthread_cond_signal(&pool->jobPosted);
-
+//		fprintf(stdout,"signalled jobPosted\n");		
 		if (0 != pthread_mutex_unlock(&pool->mutex)) {
 			perror("\n\nMutex unlock failed!:");
 			exit(EXIT_FAILURE);
 		}
+//		fprintf(stdout,"Released Mutex\n");
 	}
 }
 
@@ -231,5 +233,4 @@ void destroy_threadpool(threadpool destroyme) {
 	free(pool);
 	pool = NULL;
 	destroyme = NULL;
-
 }
